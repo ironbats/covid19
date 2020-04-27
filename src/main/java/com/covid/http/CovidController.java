@@ -69,7 +69,7 @@ public class CovidController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/country/dayone/{country}/confirmed")
+    @PutMapping("/country/dayone/country/confirmed")
     public ResponseEntity getDayOneConfirmed(@PathVariable String country) {
         CountryDayOne[] responseEntity = covid19Service.getCountryDayOne(country);
         return ResponseEntity.ok(responseEntity);
