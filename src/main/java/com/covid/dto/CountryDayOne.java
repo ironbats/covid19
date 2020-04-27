@@ -8,9 +8,50 @@ public class CountryDayOne {
     private String countryCode;
     private String lat;
     private String lon;
-    private long cases;
     private String status;
     private String date;
+    private String Province;
+    private String City;
+    private long Confirmed;
+    private long Deaths;
+    private long Recovered;
+
+
+    @JsonProperty("City")
+    public String getCity() {
+        return City;
+    }
+
+    @JsonProperty("Province")
+    public String getProvince() {
+        return Province;
+    }
+
+    public void setCity(String city) {
+        City = city;
+    }
+
+    public void setProvince(String province) {
+        Province = province;
+    }
+
+    @JsonProperty("Recovered")
+    public long getRecovered() {
+        return Recovered;
+    }
+
+    public void setRecovered(long recovered) {
+        Recovered = recovered;
+    }
+
+    @JsonProperty("Deaths")
+    public long getDeaths() {
+        return Deaths;
+    }
+
+    public void setDeaths(long deaths) {
+        Deaths = deaths;
+    }
 
     @JsonProperty("Country")
     public String getCountry() { return country; }
@@ -32,10 +73,10 @@ public class CountryDayOne {
     @JsonProperty("Lon")
     public void setLon(String value) { this.lon = value; }
 
-    @JsonProperty("Cases")
-    public long getCases() { return cases; }
-    @JsonProperty("Cases")
-    public void setCases(long value) { this.cases = value; }
+    @JsonProperty("Confirmed")
+    public long getConfirmed() { return Confirmed; }
+    @JsonProperty("Confirmed")
+    public void setConfirmed(long value) { this.Confirmed = value; }
 
     @JsonProperty("Status")
     public String getStatus() { return status; }

@@ -3,10 +3,7 @@ package com.covid.domain;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -19,7 +16,11 @@ public class CountryDayOneModel {
     private String countryCode;
     private String lat;
     private String lon;
-    private long cases;
     private String status;
     private String date;
+    private String Province;
+    private String City;
+    private long Confirmed;
+    private long Deaths;
+    private long Recovered;
 }
