@@ -4,6 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CountryDayOne {
 
+
+    public CountryDayOne(){}
+
+    public CountryDayOne(String country, String countryCode, String lat, String lon, String status, String date, String province, String city, long confirmed, long deaths, long recovered) {
+        this.country = country;
+        this.countryCode = countryCode;
+        this.lat = lat;
+        this.lon = lon;
+        this.status = status;
+        this.date = date;
+        Province = province;
+        City = city;
+        Confirmed = confirmed;
+        Deaths = deaths;
+        Recovered = recovered;
+    }
+
     private String country;
     private String countryCode;
     private String lat;

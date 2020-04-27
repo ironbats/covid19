@@ -48,38 +48,22 @@ public class CountryService {
         }
     }
 
-    public void saveCountryDayOneAllStatus(CountryDayOne[] countryDayOne) {
 
-        List<CountryDayOneModel> countryDayOneModels = new ArrayList<>();
-
-        try {
-
-            countryDayOneModels = Arrays.stream(countryDayOne)
-                    .map(c -> {
-                        CountryDayOneModel countryDayOneModel = new CountryDayOneModel();
-                        countryDayOneModel.setConfirmed(c.getConfirmed());
-                        countryDayOneModel.setDeaths(c.getDeaths());
-                        countryDayOneModel.setRecovered(c.getRecovered());
-                        countryDayOneModel.setProvince(c.getProvince());
-                        countryDayOneModel.setCity(c.getCity());
-                        countryDayOneModel.setCountry(c.getCountry());
-                        countryDayOneModel.setDate(c.getDate());
-                        countryDayOneModel.setLat(c.getLat());
-                        countryDayOneModel.setLon(c.getLon());
-                        countryDayOneModel.setCountryCode(c.getCountryCode());
-                        return countryDayOneModel;
-                    }).collect(Collectors.toList());
-
-        } catch (Exception cause) {
-            log.warn(cause.getMessage());
-        }
-
-
-        try {
-            countryDayOneRepository.saveAll(countryDayOneModels);
-        } catch (Exception cause) {
-            log.error(cause.getMessage());
-        }
+    public List<CountryDayOne> getAllStatusCountriesDayOne() {
+        return countryDayOneRepository.findAll().stream().map(countries -> {
+            CountryDayOne countryDayOne = new CountryDayOne(
+                    countries.getCountry(),
+                    countries.getCountryCode(),
+                    countries.getLat(),
+                    countries.getLon(),
+                    countries.getStatus(),
+                    countries.getDate(),
+                    countries.getProvince(),
+                    countries.getCity(),
+                    countries.getConfirmed(),
+                    countries.getDeaths(),
+                    countries.getRecovered());
+            return countryDayOne;
+        }).collect(Collectors.toList());
     }
-
 }

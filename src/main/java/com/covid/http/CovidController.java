@@ -6,10 +6,13 @@ import com.covid.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/covid")
@@ -35,59 +38,67 @@ public class CovidController {
         return ResponseEntity.ok(responseEntity);
     }
 
-    @PutMapping("/countries")
+    @GetMapping("/countries")
     public ResponseEntity getCountries() {
         Country[] countries = covid19Service.getAllCountries();
         countryService.saveSampleCountry(countries);
         return ResponseEntity.ok(countries);
     }
 
-    @PutMapping("/country/dayone/country/allstatus")
-    public ResponseEntity getDayOneAllStatus() {
+    @GetMapping("/country/dayone/{country}/allstatus")
+    public ResponseEntity getDayOneAllStatus(@PathVariable String country) {
 
-        List<FallbackDTO> listOfFallbacks = new ArrayList<>();
-
-        countryService.countryCode().forEach(code -> {
-            try {
-                CountryDayOne[] countriesDayOne = covid19Service.getCountryDayOneAllStatus(code);
-                countryService.saveCountryDayOneAllStatus(countriesDayOne);
-            } catch (Exception cause) {
-                log.warn(cause.getMessage() + "    " + code);
-                FallbackDTO fallbackDTO = new FallbackDTO();
-                fallbackDTO.setCountryCode(code);
-                fallbackDTO.setMessageError(cause.getMessage());
-                listOfFallbacks.add(fallbackDTO);
-            }
-        });
-
+        CountryDayOne[] countriesDayOne = null;
         try {
-            fallBackService.saveFallBackCountries(listOfFallbacks);
-        } catch (Exception cause) {
-            log.warn(cause.getMessage());
-        }
+            countriesDayOne = covid19Service.getCountryDayOneAllStatus(country);
 
-        return ResponseEntity.ok().build();
+        } catch (Exception cause) {
+
+            List<CountryDayOne> countryDayOnes =
+                    countryService.getAllStatusCountriesDayOne().
+                            stream()
+                            .filter(c -> c.equals(country))
+                            .collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(countryDayOnes)) {
+                return ResponseEntity.ok(countriesDayOne);
+            }
+            log.warn("Problem to search Api !" + cause.getMessage());
+            return ResponseEntity.badRequest().body(cause.getMessage() + " Problem with this country " + country);
+        }
+        return ResponseEntity.ok(countriesDayOne);
     }
 
-    @PutMapping("/country/dayone/country/confirmed")
+    @GetMapping("/country/dayone/{country}/confirmed")
     public ResponseEntity getDayOneConfirmed(@PathVariable String country) {
         CountryDayOne[] responseEntity = covid19Service.getCountryDayOne(country);
         return ResponseEntity.ok(responseEntity);
     }
 
-    @PutMapping("/country/dayone/{country}/confirmed/live")
+    @GetMapping("/country/dayone/{country}/deaths")
+    public ResponseEntity getDayOneDeaths(@PathVariable String country) {
+        CountryDayOne[] responseEntity = covid19Service.getCountryDayOne(country);
+        return ResponseEntity.ok(responseEntity);
+    }
+
+    @GetMapping("/country/dayone/{country}/recovered")
+    public ResponseEntity getDayOneRecovered(@PathVariable String country) {
+        CountryDayOne[] responseEntity = covid19Service.getCountryDayOne(country);
+        return ResponseEntity.ok(responseEntity);
+    }
+
+    @GetMapping("/country/dayone/{country}/confirmed/live")
     public ResponseEntity getDayOneConfirmedLive(@PathVariable String country) {
         CountryDayOne[] responseEntity = covid19Service.getCountryDayOneLive(country);
         return ResponseEntity.ok(responseEntity);
     }
 
-    @PutMapping("/country/dayone/{country}/confirmed/live/date")
+    @GetMapping("/country/dayone/{country}/confirmed/live/date")
     public ResponseEntity getLiveCountryAfterDate(@PathVariable String country) {
         CountryDayOne[] responseEntity = covid19Service.getLiveByCountryAfterDate(country);
         return ResponseEntity.ok(responseEntity);
     }
 
-    @PutMapping("/total-world")
+    @GetMapping("/total-world")
     public ResponseEntity getTotalWorld() {
         TotalWorld responseEntity = covid19Service.getTotalWorld();
 
